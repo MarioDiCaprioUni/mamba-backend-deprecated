@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -92,6 +94,26 @@ public class UserRepositoryTests {
         // assert user cannot be found anymore
         User tmp = userRepository.findById(user.getUserId()).orElse(null);
         assertThat(tmp).isEqualTo(null);
+    }
+
+    @Test
+    void findByUsernameContaining() {
+        // create users first
+        User user1 = new User();
+        User user2 = new User();
+        User user3 = new User();
+        user1.setUsername("Hello, World");
+        user2.setUsername("Oh Hello there!");
+        user3.setUsername("Bye!");
+        userRepository.save(user1);
+        userRepository.save(user2);
+        userRepository.save(user3);
+
+        // find users
+        List<User> users = userRepository.findByUsernameContaining("Hello");
+        assertThat(users.contains(user1)).isTrue();
+        assertThat(users.contains(user2)).isTrue();
+        assertThat(users.contains(user3)).isFalse();
     }
 
 }
