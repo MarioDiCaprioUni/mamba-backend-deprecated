@@ -1,0 +1,60 @@
+plugins {
+	id 'org.springframework.boot' version '2.6.7'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+}
+
+apply plugin: 'java'
+apply plugin: 'io.spring.dependency-management'
+
+jar {
+	enabled = false
+	duplicatesStrategy = 'exclude'
+	manifest {
+		attributes(
+				'Main-Class': 'com.mariodicaprio.mamba.MambaApplication'
+		)
+	}
+	from {
+		configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+	}
+}
+
+group = 'com.mariodicaprio'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// Lombok
+	compileOnly 'org.projectlombok:lombok:1.18.24'
+	annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+	// Guava
+	implementation 'com.google.guava:guava:31.1-jre'
+
+	// OpenAPI
+	implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
+
+	// PostgreSQL Driver
+	implementation 'org.postgresql:postgresql:42.3.6'
+
+	// H2 Database
+	testImplementation 'com.h2database:h2:2.1.212'
+
+	// Spring Boot
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	compileOnly("org.springframework.boot:spring-boot-devtools")
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
