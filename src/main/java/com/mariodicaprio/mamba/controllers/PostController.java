@@ -129,7 +129,7 @@ public class PostController {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    @GetMapping("/video")
+    @GetMapping("/videos")
     @Operation(description = "Fetches all posts with a video")
     @ApiResponse(responseCode = "200", description = "The requested page with up to 15 posts sorted from newest to oldest")
     public PageResponse<PostResponse> videos(
