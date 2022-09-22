@@ -93,4 +93,72 @@ public class PostController {
         postService.createRepost(request);
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+
+    @GetMapping("/pictures")
+    @Operation(description = "Fetches all posts with a picture")
+    @ApiResponse(responseCode = "200", description = "The requested page with up to 15 posts sorted from newest to oldest")
+    public PageResponse<PostResponse> pictures(
+            @RequestParam(required = false)
+            @Parameter(description = "The username to filter by. If none is given, then no filter is applied.")
+            String username,
+            @RequestParam(required = false, defaultValue = "1")
+            @Parameter(description = "The index of the page (one-based). Default is 1.")
+            int page
+    ) {
+        var tmp = postService.picturePostsByUsername(username, page).map(PostResponse::new);
+        return new PageResponse<>(tmp);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    @GetMapping("/video")
+    @Operation(description = "Fetches all posts with a video")
+    @ApiResponse(responseCode = "200", description = "The requested page with up to 15 posts sorted from newest to oldest")
+    public PageResponse<PostResponse> videos(
+            @RequestParam(required = false)
+            @Parameter(description = "The username to filter by. If none is given, then no filter is applied.")
+            String username,
+            @RequestParam(required = false, defaultValue = "1")
+            @Parameter(description = "The index of the page (one-based). Default is 1.")
+            int page
+    ) {
+        var tmp = postService.videoPostsByUsername(username, page).map(PostResponse::new);
+        return new PageResponse<>(tmp);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    @GetMapping("/comments")
+    @Operation(description = "Fetches all comments by a given user")
+    @ApiResponse(responseCode = "200", description = "The requested page with up to 15 posts sorted from newest to oldest")
+    public PageResponse<PostResponse> comments(
+            @RequestParam
+            @Parameter(description = "The username to filter by")
+            String username,
+            @RequestParam(required = false, defaultValue = "1")
+            @Parameter(description = "The index of the page (one-based). Default is 1.")
+            int page
+    ) {
+        var tmp = postService.commentsByUsername(username, page).map(PostResponse::new);
+        return new PageResponse<>(tmp);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    @GetMapping("/reposts")
+    @Operation(description = "Fetches all reposts by a given user")
+    @ApiResponse(responseCode = "200", description = "The requested page with up to 15 posts sorted from newest to oldest")
+    public PageResponse<PostResponse> reposts(
+            @RequestParam
+            @Parameter(description = "The username to filter by")
+            String username,
+            @RequestParam(required = false, defaultValue = "1")
+            @Parameter(description = "The index of the page (one-based). Default is 1.")
+            int page
+    ) {
+        var tmp = postService.repostsByUsername(username, page).map(PostResponse::new);
+        return new PageResponse<>(tmp);
+    }
+
 }

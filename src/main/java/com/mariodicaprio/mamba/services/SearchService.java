@@ -18,7 +18,7 @@ public class SearchService {
     ////////////////////////////////////////////////////////////////////
 
     public List<User> searchUsersByUsername(String expression) {
-        return userRepository.findByUsernameContaining(expression);
+        return userRepository.findFirst10ByUsernameContaining(expression);
     }
 
 }

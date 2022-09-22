@@ -115,4 +115,32 @@ public class PostService {
         postRepository.save(post);
     }
 
+    @Transactional
+    public Page<Post> picturePostsByUsername(String username, int page) {
+        Sort sort = Sort.by("dateCreated").descending();
+        Pageable pageable = PageRequest.of(page - 1, 15, sort);
+        return postRepository.findAllPostsWithPictureByUsername(username, pageable);
+    }
+
+    @Transactional
+    public Page<Post> videoPostsByUsername(String username, int page) {
+        Sort sort = Sort.by("dateCreated").descending();
+        Pageable pageable = PageRequest.of(page - 1, 15, sort);
+        return postRepository.findAllPostsWithVideoByUsername(username, pageable);
+    }
+
+    @Transactional
+    public Page<Post> commentsByUsername(String username, int page) {
+        Sort sort = Sort.by("dateCreated").descending();
+        Pageable pageable = PageRequest.of(page - 1, 15, sort);
+        return postRepository.findAllCommentsByUsername(username, pageable);
+    }
+
+    @Transactional
+    public Page<Post> repostsByUsername(String username, int page) {
+        Sort sort = Sort.by("dateCreated").descending();
+        Pageable pageable = PageRequest.of(page - 1, 15, sort);
+        return postRepository.findAllRepostsByUsername(username, pageable);
+    }
+
 }

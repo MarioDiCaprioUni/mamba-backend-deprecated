@@ -110,7 +110,7 @@ public class UserRepositoryTests {
         userRepository.save(user3);
 
         // find users
-        List<User> users = userRepository.findByUsernameContaining("Hello");
+        List<User> users = userRepository.findFirst10ByUsernameContaining("Hello");
         assertThat(users.contains(user1)).isTrue();
         assertThat(users.contains(user2)).isTrue();
         assertThat(users.contains(user3)).isFalse();

@@ -2,8 +2,11 @@ package com.mariodicaprio.mamba.services;
 
 
 import com.google.common.collect.Ordering;
+import com.mariodicaprio.mamba.entities.Media;
 import com.mariodicaprio.mamba.entities.Post;
+import com.mariodicaprio.mamba.entities.User;
 import com.mariodicaprio.mamba.repositories.PostRepository;
+import com.mariodicaprio.mamba.repositories.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -26,6 +29,9 @@ public class PostServiceTests {
 
     @Autowired
     PostRepository postRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     ///////////////////////////////////////////////////////////////////////
 
@@ -50,6 +56,172 @@ public class PostServiceTests {
         Comparator<Post> comparator = Comparator.comparing(Post::getDateCreated).reversed();
         boolean isOrdered = Ordering.from(comparator).isOrdered(posts);
         assertThat(isOrdered).isTrue();
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+
+    @Test
+    void picturesByUsername() {
+        // create user and posts first
+        User user = new User();
+        user.setUsername("Hello");
+
+        for (int i=0; i<20; i++) {
+            Media media = new Media();
+            media.setType("image/png");
+
+            Post picture = new Post();
+            picture.setMedia(media);
+            picture.setOwner(user);
+
+            Post noPicture = new Post();
+            noPicture.setOwner(user);
+
+            user.getPosts().add(picture);
+            user.getPosts().add(noPicture);
+        }
+
+        userRepository.save(user);
+
+        // try to fetch
+        var page = postService.picturePostsByUsername(user.getUsername(), 1);
+
+        // assert size of page is 15
+        assertThat(page.getSize()).isEqualTo(15);
+
+        // assert total elements is 15
+        assertThat(page.getContent().size()).isEqualTo(15);
+
+        // assert 20 posts were found in total
+        assertThat(page.getTotalElements()).isEqualTo(20);
+
+        // assert all posts contain an image
+        page.getContent().forEach(post -> {
+            assertThat(post.getMedia()).isNotNull();
+            assertThat(post.getMedia().getType()).startsWith("image");
+        });
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+
+    @Test
+    void videosByUsername() {
+        // create user and posts first
+        User user = new User();
+        user.setUsername("Hello");
+
+        for (int i=0; i<20; i++) {
+            Media media = new Media();
+            media.setType("video/mp4");
+
+            Post video = new Post();
+            video.setMedia(media);
+            video.setOwner(user);
+
+            Post noVideo = new Post();
+            noVideo.setOwner(user);
+
+            user.getPosts().add(video);
+            user.getPosts().add(noVideo);
+        }
+
+        userRepository.save(user);
+
+        // try to fetch
+        var page = postService.videoPostsByUsername(user.getUsername(), 1);
+
+        // assert size of page is 15
+        assertThat(page.getSize()).isEqualTo(15);
+
+        // assert total elements is 15
+        assertThat(page.getContent().size()).isEqualTo(15);
+
+        // assert 20 posts were found in total
+        assertThat(page.getTotalElements()).isEqualTo(20);
+
+        // assert all posts contain a video
+        page.getContent().forEach(post -> {
+            assertThat(post.getMedia()).isNotNull();
+            assertThat(post.getMedia().getType()).startsWith("video");
+        });
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+
+    @Test
+    void commentsByUsername() {
+        // create user and posts first
+        User user = new User();
+        user.setUsername("Hello");
+
+        for (int i=0; i<20; i++) {
+            Post comment = new Post();
+            comment.setType(Post.PostType.COMMENT);
+            comment.setOwner(user);
+
+            Post noComment = new Post();
+            noComment.setType(Post.PostType.POST);
+            noComment.setOwner(user);
+
+            user.getPosts().add(comment);
+            user.getPosts().add(noComment);
+        }
+
+        userRepository.save(user);
+
+        // try to fetch
+        var page = postService.commentsByUsername(user.getUsername(), 1);
+
+        // assert size of page is 15
+        assertThat(page.getSize()).isEqualTo(15);
+
+        // assert total elements is 15
+        assertThat(page.getContent().size()).isEqualTo(15);
+
+        // assert 20 posts were found in total
+        assertThat(page.getTotalElements()).isEqualTo(20);
+
+        // assert all posts are comments
+        page.getContent().forEach(post -> assertThat(post.getType()).isEqualTo(Post.PostType.COMMENT));
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+
+    @Test
+    void repostsByUsername() {
+        // create user and posts first
+        User user = new User();
+        user.setUsername("Hello");
+
+        for (int i=0; i<20; i++) {
+            Post repost = new Post();
+            repost.setType(Post.PostType.REPOST);
+            repost.setOwner(user);
+
+            Post noRepost = new Post();
+            noRepost.setType(Post.PostType.POST);
+            noRepost.setOwner(user);
+
+            user.getPosts().add(repost);
+            user.getPosts().add(noRepost);
+        }
+
+        userRepository.save(user);
+
+        // try to fetch
+        var page = postService.repostsByUsername(user.getUsername(), 1);
+
+        // assert size of page is 15
+        assertThat(page.getSize()).isEqualTo(15);
+
+        // assert total elements is 15
+        assertThat(page.getContent().size()).isEqualTo(15);
+
+        // assert 20 posts were found in total
+        assertThat(page.getTotalElements()).isEqualTo(20);
+
+        // assert all posts are reposts
+        page.getContent().forEach(post -> assertThat(post.getType()).isEqualTo(Post.PostType.REPOST));
     }
 
 }

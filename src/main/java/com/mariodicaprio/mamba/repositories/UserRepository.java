@@ -40,6 +40,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
      */
     boolean existsByUsername(String username);
 
-    List<User> findByUsernameContaining(@Param("username") String username);
+    List<User> findFirst10ByUsernameContaining(@Param("username") String username);
 
 }
