@@ -95,6 +95,23 @@ public class PostController {
 
     ///////////////////////////////////////////////////////////////////////////
 
+    @GetMapping("/byUser")
+    @Operation(description = "Fetches all posts by a given user.")
+    @ApiResponse(responseCode = "200", description = "The requested page with up to 15 posts sorted from newest to oldest")
+    public PageResponse<PostResponse> byUser(
+            @RequestParam(required = false)
+            @Parameter(description = "The username to filter by. If none is given, then no filter is applied.")
+            String username,
+            @RequestParam(required = false, defaultValue = "1")
+            @Parameter(description = "The index of the page (one-based). Default is 1.")
+            int page
+    ) {
+        var tmp = postService.byUsername(username, page).map(PostResponse::new);
+        return new PageResponse<>(tmp);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+
     @GetMapping("/pictures")
     @Operation(description = "Fetches all posts with a picture")
     @ApiResponse(responseCode = "200", description = "The requested page with up to 15 posts sorted from newest to oldest")

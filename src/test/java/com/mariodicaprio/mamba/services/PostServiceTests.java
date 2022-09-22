@@ -61,6 +61,33 @@ public class PostServiceTests {
     ///////////////////////////////////////////////////////////////////////
 
     @Test
+    void byUsername() {
+        // create user and posts first
+        User user = new User();
+        user.setUsername("Hello");
+        for (int i=0; i<20; i++) {
+            var post = new Post();
+            post.setOwner(user);
+            user.getPosts().add(post);
+        }
+        userRepository.save(user);
+
+        // try to fetch
+        var page = postService.byUsername(user.getUsername(), 1);
+
+        // assert size of page is 15
+        assertThat(page.getSize()).isEqualTo(15);
+
+        // assert total elements is 15
+        assertThat(page.getContent().size()).isEqualTo(15);
+
+        // assert 20 posts were found in total
+        assertThat(page.getTotalElements()).isEqualTo(20);
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+
+    @Test
     void picturesByUsername() {
         // create user and posts first
         User user = new User();

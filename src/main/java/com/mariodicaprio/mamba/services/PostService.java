@@ -116,6 +116,13 @@ public class PostService {
     }
 
     @Transactional
+    public Page<Post> byUsername(String username, int page) {
+        Sort sort = Sort.by("dateCreated").descending();
+        Pageable pageable = PageRequest.of(page - 1, 15, sort);
+        return postRepository.findAllByUsername(username, pageable);
+    }
+
+    @Transactional
     public Page<Post> picturePostsByUsername(String username, int page) {
         Sort sort = Sort.by("dateCreated").descending();
         Pageable pageable = PageRequest.of(page - 1, 15, sort);

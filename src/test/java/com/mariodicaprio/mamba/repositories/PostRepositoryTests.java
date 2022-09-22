@@ -84,6 +84,26 @@ public class PostRepositoryTests {
     }
 
     @Test
+    void findAllByUsername() {
+        // create user and posts first
+        User user = new User();
+        user.setUsername("Hello");
+        for (int i=0; i<5; i++) {
+            var post = new Post();
+            post.setOwner(user);
+            user.getPosts().add(post);
+        }
+        userRepository.save(user);
+
+        // try to fetch
+        Pageable pageable = Pageable.ofSize(5);
+        var page = postRepository.findAllByUsername(user.getUsername(), pageable);
+
+        // assert all posts are contained
+        assertThat(page.getTotalElements()).isEqualTo(5);
+    }
+
+    @Test
     void findAllPostsWithPictureByUsername() {
         // create user and posts first
         User user = new User();

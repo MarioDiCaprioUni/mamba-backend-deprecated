@@ -27,6 +27,9 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
      */
     List<Post> findByTitle(String title);
 
+    @Query("FROM Post post WHERE post.owner.username = :username")
+    Page<Post> findAllByUsername(@Param("username") String username, Pageable pageable);
+
     @Query("FROM Post post WHERE post.type = 'POST' AND post.media.type LIKE 'image%' AND post.owner.username = :username")
     Page<Post> findAllPostsWithPictureByUsername(@Param("username") String username, Pageable pageable);
 
