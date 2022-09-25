@@ -14,14 +14,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -94,20 +94,31 @@ public class PostControllerTests {
         userRepository.save(user);
 
         // create post request
-        byte[] media = new ClassPathResource("img/test.jpg").getInputStream().readAllBytes();
-        CreatePostRequest request = new CreatePostRequest(
+        CreatePostRequest tmp = new CreatePostRequest(
                 "Hello",
                 "This is a test case",
-                new CreatePostRequest.CreatePostRequestMedia(media, "image/jpg"),
+                //new CreatePostRequest.CreatePostRequestMedia(media, "image/jpg"),
+                //new MockMultipartFile("test image", "test.jpg", "image/jpg", media),
                 user.getUserId(),
                 new ArrayList<>()
         );
-        String json = objectMapper.writeValueAsString(request);
+        var request = new MockMultipartFile(
+                "request",
+                "request.json",
+                "application/json",
+                objectMapper.writeValueAsBytes(tmp)
+        );
+        var media = new MockMultipartFile(
+                "media",
+                "test.jpg",
+                "image/jpg",
+                new ClassPathResource("img/test.jpg").getInputStream().readAllBytes()
+        );
 
         // make request
         String url = "/post/createPost";
         mockMvc
-                .perform(post(url).contentType(MediaType.APPLICATION_JSON).content(json))
+                .perform(multipart(url).file(request).file(media))
                 .andExpect(status().isOk());
 
         // fetch created post from database
@@ -117,7 +128,7 @@ public class PostControllerTests {
         // test
         assertThat(post.getText()).isEqualTo("This is a test case");
         // media
-        assertThat(post.getMedia().getData()).isEqualTo(media);
+        assertThat(post.getMedia().getData()).isEqualTo(media.getBytes());
         // owner
         assertThat(post.getOwner()).isEqualTo(user);
         // reposts

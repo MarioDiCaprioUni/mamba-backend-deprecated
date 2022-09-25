@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 
 
@@ -59,14 +61,17 @@ public class PostController {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    @PostMapping("/createPost")
+    @PostMapping(value = "/createPost", consumes = {"multipart/form-data"})
     @Operation(description = "Creates a post")
     public void createPost(
-            @RequestBody
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "The post's creation request")
-            CreatePostRequest request
-    ) {
-        postService.createPost(request);
+            @RequestPart
+            @Parameter(description = "The request's non-file data as a JSON object")
+            CreatePostRequest request,
+            @RequestPart
+            @Parameter(description = "The media as a file")
+            MultipartFile media
+    ) throws IOException {
+        postService.createPost(request, media);
     }
 
     ///////////////////////////////////////////////////////////////////////////
