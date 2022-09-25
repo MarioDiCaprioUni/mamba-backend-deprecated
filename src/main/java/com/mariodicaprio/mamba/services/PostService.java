@@ -16,7 +16,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -51,7 +53,7 @@ public class PostService {
     }
 
     @Transactional
-    public void createPost(CreatePostRequest request) {
+    public void createPost(CreatePostRequest request, MultipartFile media) throws IOException {
         List<Tag> tags =
                 (request.getTagNames() == null)? new ArrayList<>() :
                         request
@@ -63,17 +65,17 @@ public class PostService {
 
         User owner = (request.getOwnerId() == null)? null : userService.byId(request.getOwnerId());
 
-        Media media = null;
-        if (request.getMedia() != null) {
-            media = new Media();
-            media.setData(request.getMedia().getData());
-            media.setType(request.getMedia().getType());
+        Media theMedia = null;
+        if (media != null) {
+            theMedia = new Media();
+            theMedia.setData(media.getBytes());
+            theMedia.setType(media.getContentType());
         }
 
         Post post = new Post();
         post.setTitle(request.getTitle());
         post.setText(request.getText());
-        post.setMedia(media);
+        post.setMedia(theMedia);
         post.setOwner(owner);
         post.setTags(tags);
         post.setType(Post.PostType.POST);
