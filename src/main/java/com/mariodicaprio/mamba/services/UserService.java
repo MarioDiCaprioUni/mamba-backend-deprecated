@@ -42,6 +42,7 @@ public class UserService {
      * @param page The index of the requested page (one-based)
      * @return The corresponding page of users.
      */
+    @Transactional(readOnly = true)
     public Page<User> all(int page) {
         Sort sort = Sort.unsorted();
         Pageable pageable = PageRequest.of(page - 1, 15, sort);
@@ -54,6 +55,7 @@ public class UserService {
      * @param userId The ID of the user to fetch
      * @return The user with the given ID or {@code null} of not found
      */
+    @Transactional(readOnly = true)
     public User byId(UUID userId) {
         if (userId == null)
             return null;
@@ -66,6 +68,7 @@ public class UserService {
      * @param username The username of the user to fetch
      * @return The user with the given username
      */
+    @Transactional(readOnly = true)
     public User byUsername(String username) {
         if (username == null)
             return null;
@@ -105,11 +108,13 @@ public class UserService {
      * @return The user's basic data
      * @see UserBasicDataResponse
      */
+    @Transactional(readOnly = true)
     public UserBasicDataResponse basicData(UUID userId) {
         User user = this.byId(userId);
         return (user == null)? null : new UserBasicDataResponse(user);
     }
 
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void sendFriendRequest(FriendRequest request) throws DuplicateFriendRequestException, UserDoesNotExistException {
         User from = this.byId(request.getFrom());
         User to = this.byId(request.getTo());
@@ -133,6 +138,7 @@ public class UserService {
         userRepository.save(to);
     }
 
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void acceptFriendRequest(FriendRequest request) throws UserDoesNotExistException {
         User from = this.byId(request.getFrom());
         User to = this.byId(request.getTo());

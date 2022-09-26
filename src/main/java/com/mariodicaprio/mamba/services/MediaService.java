@@ -5,6 +5,7 @@ import com.mariodicaprio.mamba.entities.Media;
 import com.mariodicaprio.mamba.repositories.MediaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ public class MediaService {
 
     ////////////////////////////////////////////////////////////////////////
 
+    @Transactional
     public void save(MultipartFile file) throws IOException {
         Media media = new Media();
         media.setType(file.getContentType());
@@ -26,6 +28,7 @@ public class MediaService {
         mediaRepository.save(media);
     }
 
+    @Transactional(readOnly = true)
     public Media getById(UUID id) {
         if (id == null) {
             return null;
