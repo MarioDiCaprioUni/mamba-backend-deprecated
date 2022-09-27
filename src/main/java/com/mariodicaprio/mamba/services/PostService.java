@@ -40,14 +40,12 @@ public class PostService {
 
     ///////////////////////////////////////////////////////////////////////////////
 
-    @Transactional(readOnly = true)
     public Page<Post> all(int page) {
         Sort sort = Sort.by("dateCreated").descending();
         Pageable pageable = PageRequest.of(page - 1, 15, sort);
         return postRepository.findAll(pageable);
     }
 
-    @Transactional(readOnly = true)
     public Post byId(UUID postId) {
         if (postId == null)
             return null;
@@ -119,35 +117,35 @@ public class PostService {
         postRepository.save(post);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Page<Post> byUsername(String username, int page) {
         Sort sort = Sort.by("dateCreated").descending();
         Pageable pageable = PageRequest.of(page - 1, 15, sort);
         return postRepository.findAllByUsername(username, pageable);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Page<Post> picturePostsByUsername(String username, int page) {
         Sort sort = Sort.by("dateCreated").descending();
         Pageable pageable = PageRequest.of(page - 1, 15, sort);
         return postRepository.findAllPostsWithPictureByUsername(username, pageable);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Page<Post> videoPostsByUsername(String username, int page) {
         Sort sort = Sort.by("dateCreated").descending();
         Pageable pageable = PageRequest.of(page - 1, 15, sort);
         return postRepository.findAllPostsWithVideoByUsername(username, pageable);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Page<Post> commentsByUsername(String username, int page) {
         Sort sort = Sort.by("dateCreated").descending();
         Pageable pageable = PageRequest.of(page - 1, 15, sort);
         return postRepository.findAllCommentsByUsername(username, pageable);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Page<Post> repostsByUsername(String username, int page) {
         Sort sort = Sort.by("dateCreated").descending();
         Pageable pageable = PageRequest.of(page - 1, 15, sort);
