@@ -5,10 +5,8 @@ import com.google.common.collect.Ordering;
 import com.mariodicaprio.mamba.entities.Media;
 import com.mariodicaprio.mamba.entities.Post;
 import com.mariodicaprio.mamba.entities.User;
-import com.mariodicaprio.mamba.repositories.MediaRepository;
 import com.mariodicaprio.mamba.repositories.PostRepository;
 import com.mariodicaprio.mamba.repositories.UserRepository;
-import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -35,30 +33,14 @@ public class PostServiceTests {
     @Autowired
     UserRepository userRepository;
 
-    @Autowired
-    MediaRepository mediaRepository;
-
-    @Autowired
-    EasyRandom easyRandom;
-
     ///////////////////////////////////////////////////////////////////////
 
     @Test
     void postAll() throws InterruptedException {
-        // create user first
-        User user = easyRandom.nextObject(User.class);
-        userRepository.save(user);
-
-        // create media first
-        Media media = easyRandom.nextObject(Media.class);
-        mediaRepository.save(media);
-
         // create 20 posts
         for (int i=0; i<20; i++) {
             Post post = new Post();
             post.setTitle("Post #" + i);
-            post.setOwner(user);
-            post.setMedia(media);
             postRepository.save(post);
             // sleep to sort posts by date created
             Thread.sleep(10);
@@ -81,7 +63,7 @@ public class PostServiceTests {
     @Test
     void byUsername() {
         // create user and posts first
-        User user = easyRandom.nextObject(User.class);
+        User user = new User();
         user.setUsername("Hello");
         for (int i=0; i<20; i++) {
             var post = new Post();

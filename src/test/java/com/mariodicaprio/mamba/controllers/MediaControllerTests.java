@@ -4,7 +4,6 @@ package com.mariodicaprio.mamba.controllers;
 import com.mariodicaprio.mamba.entities.Media;
 import com.mariodicaprio.mamba.repositories.MediaRepository;
 import com.mariodicaprio.mamba.services.MediaService;
-import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -30,9 +29,6 @@ public class MediaControllerTests {
 
     @Autowired
     MediaService mediaService;
-
-    @Autowired
-    EasyRandom easyRandom;
 
     @Autowired
     MockMvc mockMvc;
@@ -62,7 +58,9 @@ public class MediaControllerTests {
     @Test
     void get() throws Exception {
         // create media first
-        Media media = easyRandom.nextObject(Media.class);
+        Media media = new Media();
+        media.setType("image/jpg");
+        media.setData(new ClassPathResource("img/test.jpg").getInputStream().readAllBytes());
         mediaRepository.save(media);
 
         // make request
