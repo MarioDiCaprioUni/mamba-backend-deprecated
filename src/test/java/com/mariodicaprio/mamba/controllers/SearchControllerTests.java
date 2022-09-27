@@ -3,6 +3,7 @@ package com.mariodicaprio.mamba.controllers;
 
 import com.mariodicaprio.mamba.entities.User;
 import com.mariodicaprio.mamba.repositories.UserRepository;
+import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -25,6 +26,9 @@ public class SearchControllerTests {
     UserRepository userRepository;
 
     @Autowired
+    EasyRandom easyRandom;
+
+    @Autowired
     MockMvc mockMvc;
 
     //////////////////////////////////////////////////////
@@ -34,9 +38,9 @@ public class SearchControllerTests {
         String url = "/search/users";
 
         // create users first
-        User user1 = new User();
-        User user2 = new User();
-        User user3 = new User();
+        User user1 = easyRandom.nextObject(User.class);
+        User user2 = easyRandom.nextObject(User.class);
+        User user3 = easyRandom.nextObject(User.class);
         user1.setUsername("Hello, World");
         user2.setUsername("Oh Hello there!");
         user3.setUsername("Bye!");

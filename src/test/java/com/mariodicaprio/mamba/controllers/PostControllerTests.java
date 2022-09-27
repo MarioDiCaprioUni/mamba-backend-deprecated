@@ -8,6 +8,7 @@ import com.mariodicaprio.mamba.repositories.PostRepository;
 import com.mariodicaprio.mamba.repositories.UserRepository;
 import com.mariodicaprio.mamba.requests.CreateCommentRequest;
 import com.mariodicaprio.mamba.requests.CreatePostRequest;
+import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -41,6 +42,9 @@ public class PostControllerTests {
     UserRepository userRepository;
 
     @Autowired
+    EasyRandom easyRandom;
+
+    @Autowired
     MockMvc mockMvc;
 
     /////////////////////////////////////////////////////////
@@ -48,11 +52,11 @@ public class PostControllerTests {
     @Test
     void byId() throws Exception {
         //create owner of post first
-        User owner = new User();
+        User owner = easyRandom.nextObject(User.class);
         userRepository.save(owner);
 
         // create post first
-        Post post = new Post();
+        Post post = easyRandom.nextObject(Post.class);
         post.setOwner(owner);
         postRepository.save(post);
 
@@ -90,18 +94,18 @@ public class PostControllerTests {
     @Test
     void createPost() throws Exception {
         // create user first
-        User user = new User();
+        User user = easyRandom.nextObject(User.class);
         userRepository.save(user);
 
         // create post request
         CreatePostRequest tmp = new CreatePostRequest(
                 "Hello",
                 "This is a test case",
-                //new CreatePostRequest.CreatePostRequestMedia(media, "image/jpg"),
-                //new MockMultipartFile("test image", "test.jpg", "image/jpg", media),
                 user.getUserId(),
                 new ArrayList<>()
         );
+                //new CreatePostRequest.CreatePostRequestMedia(media, "image/jpg"),
+                //new MockMultipartFile("test image", "test.jpg", "image/jpg", media),
         var request = new MockMultipartFile(
                 "request",
                 "request.json",
@@ -142,7 +146,7 @@ public class PostControllerTests {
     @Test
     void createComment() throws Exception {
         // create user first
-        User user = new User();
+        User user = easyRandom.nextObject(User.class);
         userRepository.save(user);
 
         // create original post first
@@ -168,7 +172,7 @@ public class PostControllerTests {
     @Test
     void createRepost() throws Exception {
         // create user first
-        User user = new User();
+        User user = easyRandom.nextObject(User.class);
         userRepository.save(user);
 
         // create original post first

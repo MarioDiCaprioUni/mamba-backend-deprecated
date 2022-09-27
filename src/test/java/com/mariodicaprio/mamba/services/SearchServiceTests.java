@@ -3,6 +3,7 @@ package com.mariodicaprio.mamba.services;
 
 import com.mariodicaprio.mamba.entities.User;
 import com.mariodicaprio.mamba.repositories.UserRepository;
+import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -25,14 +26,17 @@ public class SearchServiceTests {
     @Autowired
     SearchService searchService;
 
+    @Autowired
+    EasyRandom easyRandom;
+
     /////////////////////////////////////////////////////////
 
     @Test
     void searchUsersByUsername() {
         // create users first
-        User user1 = new User();
-        User user2 = new User();
-        User user3 = new User();
+        User user1 = easyRandom.nextObject(User.class);
+        User user2 = easyRandom.nextObject(User.class);
+        User user3 = easyRandom.nextObject(User.class);
         user1.setUsername("Hello, World");
         user2.setUsername("Oh Hello there!");
         user3.setUsername("Bye!");

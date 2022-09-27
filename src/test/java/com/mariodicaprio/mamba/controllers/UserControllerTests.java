@@ -9,6 +9,7 @@ import com.mariodicaprio.mamba.repositories.UserRepository;
 import com.mariodicaprio.mamba.requests.FriendRequest;
 import com.mariodicaprio.mamba.requests.LikePostRequest;
 import com.mariodicaprio.mamba.services.UserService;
+import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -42,6 +43,9 @@ public class UserControllerTests {
     ObjectMapper objectMapper;
 
     @Autowired
+    EasyRandom easyRandom;
+
+    @Autowired
     MockMvc mockMvc;
 
     //////////////////////////////////////////////////////////////////////////////////////
@@ -49,7 +53,7 @@ public class UserControllerTests {
     @Test
     void byId() throws Exception {
         // create user first
-        User user = new User();
+        User user = easyRandom.nextObject(User.class);
         userRepository.save(user);
 
         // make request
@@ -63,8 +67,7 @@ public class UserControllerTests {
     @Test
     void byUsername() throws Exception {
         // create user first
-        User user = new User();
-        user.setUsername("Hello");
+        User user = easyRandom.nextObject(User.class);
         userRepository.save(user);
 
         // make request
@@ -81,7 +84,7 @@ public class UserControllerTests {
 
         // create 20 users
         for (int i=0; i<20; i++) {
-            User user = new User();
+            User user = easyRandom.nextObject(User.class);
             userRepository.save(user);
         }
 
@@ -142,7 +145,7 @@ public class UserControllerTests {
         String url = "/user/basicData";
 
         // create user first
-        User user = new User();
+        User user = easyRandom.nextObject(User.class);
         userRepository.save(user);
 
         // send request

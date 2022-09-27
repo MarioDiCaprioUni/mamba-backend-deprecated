@@ -7,6 +7,7 @@ import com.mariodicaprio.mamba.exceptions.UserDoesNotExistException;
 import com.mariodicaprio.mamba.repositories.UserRepository;
 import com.mariodicaprio.mamba.requests.FriendRequest;
 import com.mariodicaprio.mamba.responses.UserBasicDataResponse;
+import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +31,16 @@ public class UserServiceTests {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    EasyRandom easyRandom;
+
     //////////////////////////////////////////////////////////////////////////////////////
 
     @Test
     void userAll() {
         // create 5 users
         for (int i=0; i<5; i++) {
-            User tmp = new User();
+            User tmp = easyRandom.nextObject(User.class);
             userRepository.save(tmp);
         }
 
@@ -48,7 +52,7 @@ public class UserServiceTests {
     @Test
     void userById() {
         // create user first
-        User user = new User();
+        User user = easyRandom.nextObject(User.class);
         userRepository.save(user);
 
         // assert user can be found
@@ -59,7 +63,7 @@ public class UserServiceTests {
     @Test
     void userByUsername() {
         // create user first
-        User user = new User();
+        User user = easyRandom.nextObject(User.class);
         user.setUsername("Hello");
         userRepository.save(user);
 
@@ -71,7 +75,7 @@ public class UserServiceTests {
     @Test
     void userBasicData() {
         // create user first
-        User user = new User();
+        User user = easyRandom.nextObject(User.class);
         userRepository.save(user);
 
         // assert data can be found
