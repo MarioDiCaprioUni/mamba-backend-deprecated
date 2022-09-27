@@ -102,7 +102,7 @@ public class Post {
      * The post's media (e.g. image or video).
      */
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn
+    @JoinColumn(name = "mediaId", referencedColumnName = "mediaId")
     private Media media;
 
     //////////////////////////////////////////////////////////////
@@ -110,8 +110,8 @@ public class Post {
     /**
      * The owner of this post.
      */
-    @JoinColumn
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "userId")
+    @ManyToOne
     private User owner;
 
     //////////////////////////////////////////////////////////////
@@ -127,8 +127,8 @@ public class Post {
     /**
      * The post that is referenced by this post (e.g. if this post is a comment to another post).
      */
-    @JoinColumn
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "referenceId")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Post reference;
 
     //////////////////////////////////////////////////////////////

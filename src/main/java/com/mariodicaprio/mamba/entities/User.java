@@ -146,7 +146,7 @@ public class User {
     /**
      * The posts that were posted by this user.
      */
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "owner")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
     private List<Post> posts = new ArrayList<>();
 
     /////////////////////////////////////////////////////////
