@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,7 +28,6 @@ public class MediaController {
     @GetMapping
     @Operation(description = "Fetches a media by its ID")
     @ApiResponse(responseCode = "200", description = "The requested media or null if none was found")
-    @Transactional
     public Resource get(
             @RequestParam
             @Parameter(description = "The media's ID")
